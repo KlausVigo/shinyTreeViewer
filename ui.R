@@ -27,7 +27,7 @@ shinyUI(pageWithSidebar(
             numericInput("rotate", "Rotate:", value=0)
         ),         
         checkboxInput("scalebar", "scale bar", TRUE),  
-        checkboxInput("midpoint", "Midpoint rooting", FALSE),
+#        checkboxInput("midpoint", "Midpoint rooting", FALSE),
         tags$hr(),
 #Tips        
         checkboxInput("showTips", "Show tip labels", TRUE),
