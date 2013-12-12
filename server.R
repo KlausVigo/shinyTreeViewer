@@ -1,6 +1,6 @@
 library(shiny)
 library(ape)
-library(phangorn)
+#library(phangorn)
 
 
 
@@ -43,7 +43,7 @@ shinyServer(function(input, session, output) {
         if(length(trees)==1)tree = trees[[1]]
         else tree = trees[[pos()]]
         
-        if(input$midpoint) tree <- midpoint(tree)
+#        if(input$midpoint) tree <- midpoint(tree)
         plot.phylo(tree, 
                 type = input$type,
                 show.tip.label = input$showTips,
@@ -65,7 +65,7 @@ shinyServer(function(input, session, output) {
             
             if(length(trees)==1)tree = trees[[1]]
             else tree = trees[[pos()]]
-            if(input$midpoint) tree <- midpoint(tree)
+#            if(input$midpoint) tree <- midpoint(tree)
             plot.phylo(tree, 
                        type = input$type,
                        show.tip.label = input$showTips,
@@ -90,14 +90,14 @@ shinyServer(function(input, session, output) {
         cat("library(phangorn) \n", sep="")
         if(length(trees)==1){
             if(input$format=='phylip') cat("tree = read.tree('",input$file1$name,"') \n", sep="")
-            else cat("tree = read.nexus(",input$file1,") \n", sep="")
+            else cat("tree = read.nexus(",input$file1$name,") \n", sep="")
         }
         else {
             if(input$format=='phylip') cat("trees = read.tree('",input$file1$name,"') \n", sep="")
-            else cat("trees = read.nexus(",input$file1,") \n", sep="")
+            else cat("trees = read.nexus(",input$file1$name,") \n", sep="")
             cat("tree = trees[[",pos(),"]] \n", sep="")
         }
-        if(input$midpoint) cat("tree = midpoint(tree)\n", sep="")
+#        if(input$midpoint) cat("tree = midpoint(tree)\n", sep="")
         if(input$showTips==FALSE)showTips = ", show.tip.label=FALSE"
         else showTips = ""
         if(input$showNodes==TRUE)showNodes = ", show.node.label=TRUE"
