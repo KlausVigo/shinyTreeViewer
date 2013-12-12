@@ -1,6 +1,6 @@
 library(shiny)
 library(ape)
-#library(phangorn)
+library(phangorn)
 
 
 
@@ -20,7 +20,7 @@ shinyServer(function(input, session, output) {
 
     output$treeControls <- renderUI({
         inFile <- input$file1        
-        if (is.null(inFile))
+        if (length(inFile)==1)
             return(NULL)        
         tree <- treeInput()
         ntrees <- length(tree) 
@@ -33,11 +33,9 @@ shinyServer(function(input, session, output) {
     })
 
     output$phyloPlot <- renderPlot({
-
         inFile <- input$file1        
-        if (is.null(inFile))
-            return(NULL)
-        
+        if (length(inFile)==1)
+            return(NULL)      
         trees <- treeInput()
         
         if(length(trees)==1)tree = trees[[1]]
@@ -82,8 +80,8 @@ shinyServer(function(input, session, output) {
         })
     
     output$rcode <- renderPrint({       
-        inFile <- input$file1        
-        if (is.null(inFile))
+        inFile <- input$file1     
+        if (length(inFile)==1)
             return(NULL)
         trees <- treeInput()
         cat("library(ape) \n", sep="")
