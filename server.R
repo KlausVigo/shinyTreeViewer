@@ -16,7 +16,7 @@ shinyServer(function(input, session, output) {
     treeInput <- reactive({
         readTrees(input$file1$datapath, input$format)
     })
-
+    
 
     output$treeControls <- renderUI({
         inFile <- input$file1        
@@ -32,6 +32,7 @@ shinyServer(function(input, session, output) {
         input$tpos
     })
 
+    
     output$phyloPlot <- renderPlot({
         inFile <- input$file1        
         if (length(inFile)==1)
@@ -41,7 +42,7 @@ shinyServer(function(input, session, output) {
         if(length(trees)==1)tree = trees[[1]]
         else tree = trees[[pos()]]
         
-#        if(input$midpoint) tree <- midpoint(tree)
+        if(input$midpoint) tree <- midpoint(tree)
         plot.phylo(tree, 
                 type = input$type,
                 show.tip.label = input$showTips,
@@ -55,24 +56,49 @@ shinyServer(function(input, session, output) {
                 tip.color = input$tipcolor)
         if(input$scalebar) add.scale.bar()
     })
+
+    
+    
     output$downloadPlot <- downloadHandler(
-        filename = function() { paste(input$filename, '.png', sep='') },
+        filename = function() { paste(input$filename, '.', input$ExportFormat, sep='') },
         content = function(file) {
-            png(file)
-            trees <- treeInput()
             
+            width = 6
+            height = ifelse(input$type=='phylogram' || input$type=='cladogram',4,6)
+            dpi=300
+            ext = input$ExportFormat
+            
+#            png(file)
+            switch(ext,
+                   eps = postscript(file, height=height, width=width),
+                   ps = postscript(file, height=height, width=width),       
+                   tex = pictex(file, height=height, width=width),                                                      
+                   pdf = pdf(file, height=height, width=width),
+                   svg = svg(file, height=height, width=width),
+                   wmf = win.metafile(file, width=width, height=height),
+                   emf = win.metafile(file, width=width, height=height),
+                   png = png(file, width=width, height=height, res = dpi, units = "in"),
+                   jpeg = jpeg(file, width=width, height=height, res=dpi, units="in"),
+                   jpg = jpeg(file, width=width, height=height, res=dpi, units="in"),   
+                   bmp = bmp(file, width=width, height=height, res=dpi, units="in"),
+                   tiff = tiff(file, width=width, height=height, res=dpi, units="in")                                      
+            )
+                        
+            trees <- treeInput()
             if(length(trees)==1)tree = trees[[1]]
             else tree = trees[[pos()]]
-#            if(input$midpoint) tree <- midpoint(tree)
-            plot.phylo(tree, 
+            
+            if(input$midpoint) tree <- midpoint(tree)
+
+            plot.phylo(tree,
                        type = input$type,
                        show.tip.label = input$showTips,
                        show.node.label = input$showNodes,
-                       direction=input$direction, 
+                       direction=input$direction,
                        rotate.tree = input$rotate,
-                       use.edge.length = input$edgeLength,   
-                       edge.width = input$edgewidth, 
-                       edge.lty =input$lty,   
+                       use.edge.length = input$edgeLength,
+                       edge.width = input$edgewidth,
+                       edge.lty =input$lty,
                        edge.color =input$edgecolor,
                        tip.color = input$tipcolor)
             if(input$scalebar) add.scale.bar()
@@ -80,27 +106,27 @@ shinyServer(function(input, session, output) {
         })
     
     output$rcode <- renderPrint({       
-        inFile <- input$file1     
+        inFile <- input$file1       
         if (length(inFile)==1)
             return(NULL)
         trees <- treeInput()
         cat("library(ape) \n", sep="")
-        cat("library(phangorn) \n", sep="")
+        cat("library(phangorn) \n", sep="")      
         if(length(trees)==1){
             if(input$format=='phylip') cat("tree = read.tree('",input$file1$name,"') \n", sep="")
-            else cat("tree = read.nexus(",input$file1$name,") \n", sep="")
+            else cat("tree = read.nexus('",input$file1$name,"') \n", sep="")
         }
         else {
             if(input$format=='phylip') cat("trees = read.tree('",input$file1$name,"') \n", sep="")
-            else cat("trees = read.nexus(",input$file1$name,") \n", sep="")
+            else cat("trees = read.nexus('",input$file1$name,"') \n", sep="")
             cat("tree = trees[[",pos(),"]] \n", sep="")
         }
-#        if(input$midpoint) cat("tree = midpoint(tree)\n", sep="")
+        if(input$midpoint) cat("tree = midpoint(tree)\n", sep="")
         if(input$showTips==FALSE)showTips = ", show.tip.label=FALSE"
         else showTips = ""
         if(input$showNodes==TRUE)showNodes = ", show.node.label=TRUE"
         else showNodes = ""
-        if(input$direction!="rightwards") direction = paste(", direction=", input$direction, sep="")
+        if(input$direction!="rightwards") direction = paste(", direction='", input$direction, "'", sep="")
         else direction=""
         if(input$rotate!=0) rotate = paste(", rotate.tree=", input$rotate, sep="")
         else rotate=""    
@@ -119,3 +145,4 @@ shinyServer(function(input, session, output) {
     })
     
 })
+

@@ -3,12 +3,11 @@ shinyUI(pageWithSidebar(
     sidebarPanel(
         
         fileInput('file1', 'Choose tree file'),
-        radioButtons('format', 'File format',
-                     c(phylip='phylip',
-                       nexus='nexus'),
-                     'phylip'), 
+        selectInput('format', 'File format', choices = c('phylip', 'nexus')),
+        
         tags$hr(),        
-        textInput('filename', "Filename"),
+        textInput('filename', 'Filename'),
+        selectInput('ExportFormat', '', choices = c('pdf', 'ps', 'tex', 'svg', 'png', 'jpg', 'bmp' )),
         downloadButton('downloadPlot', 'Export Plot'),    
         tags$hr(),
 # Layout        
@@ -27,7 +26,7 @@ shinyUI(pageWithSidebar(
             numericInput("rotate", "Rotate:", value=0)
         ),         
         checkboxInput("scalebar", "scale bar", TRUE),  
-#        checkboxInput("midpoint", "Midpoint rooting", FALSE),
+        checkboxInput("midpoint", "Midpoint rooting", FALSE),
         tags$hr(),
 #Tips        
         checkboxInput("showTips", "Show tip labels", TRUE),
