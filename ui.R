@@ -25,14 +25,14 @@ shinyUI(pageWithSidebar(
             condition = "input.type == 'fan' || input.type == 'unrooted' || input.type == 'radial'",
             numericInput("rotate", "Rotate:", value=0)
         ),         
-        checkboxInput("scalebar", "scale bar", TRUE),  
+        checkboxInput("scalebar", "Scale bar", TRUE),  
         checkboxInput("midpoint", "Midpoint rooting", FALSE),
         tags$hr(),
 #Tips        
-        checkboxInput("showTips", "Show tip labels", TRUE),
+        checkboxInput("showTips", "Tip labels", TRUE),
         textInput("tipcolor", "Tip color:", value="black"),
 #Nodes
-        checkboxInput("showNodes", "Show node labels (bs)", FALSE),
+        checkboxInput("showNodes", "Node labels (e.g. bootstrap values)", FALSE),
         tags$hr(),
 #Edges  
         checkboxInput("edgeLength", "Use edge length", TRUE),
