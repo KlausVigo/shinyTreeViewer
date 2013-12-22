@@ -1,3 +1,4 @@
+tabPanelAbout <- source("about.R")$value
 shinyUI(pageWithSidebar(
     headerPanel("shinyTreeViewer"),
     sidebarPanel(
@@ -38,14 +39,13 @@ shinyUI(pageWithSidebar(
         checkboxInput("edgeLength", "Use edge length", TRUE),
         numericInput("edgewidth", "Edge width", value=1),
         textInput("edgecolor", "Edge color:", value="black"),
-        numericInput("lty", "Line type:", value=1)
-        
+        numericInput("lty", "Line type:", value=1)        
     ),
     mainPanel(
         tabsetPanel(
             tabPanel("Plot", plotOutput("phyloPlot")), 
-            tabPanel("R code", verbatimTextOutput("rcode")) 
+            tabPanel("R code", verbatimTextOutput("rcode")),
+            tabPanelAbout() #("About")
         )
-
     )
 ))
