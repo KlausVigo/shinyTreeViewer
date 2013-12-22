@@ -5,7 +5,7 @@ This repository hosts a simple tree viewer which is based mainly on the R packag
 
 You can run shinyTreeViewer from inside R. You need to have installed recent versions of the ape, devtools phangorn and shiny package.
 
-shiny::runGitHub('shinyTreeViewer', 'KlausVigo')
+    shiny::runGitHub('shinyTreeViewer', 'KlausVigo')
 
 shinyTreeViewer can launched also via the [RStudio server](http://klash.shinyapps.io/shinyTreeViewer/).
 
