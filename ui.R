@@ -2,11 +2,9 @@ tabPanelAbout <- source("about.R")$value
 shinyUI(pageWithSidebar(
     headerPanel("shinyTreeViewer"),
     sidebarPanel(
-        
         fileInput('file1', 'Choose tree file'),
-        selectInput('format', 'File format', choices = c('phylip', 'nexus')),
-        
-        tags$hr(),        
+#        selectInput('format', 'File format', choices = c('phylip', 'nexus')),
+#        tags$hr(),        
         textInput('filename', 'Filename'),
         selectInput('ExportFormat', '', choices = c('pdf', 'ps', 'tex', 'svg', 'png', 'jpg', 'bmp' )),
         downloadButton('downloadPlot', 'Export Plot'),    

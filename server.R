@@ -11,17 +11,28 @@ readTrees <- function(file, format="phylip"){
     tree
 }
 
-shinyServer(function(input, session, output) {
 
+
+shinyServer(function(input, session, output) {
+ 
+    xx <- reactiveValues()
+    xx$format <- "phylip"
+    
     treeInput <- reactive({
-        readTrees(input$file1$datapath, input$format)
+        tmp = strsplit(tolower(input$file1$name), "[.]")[[1]]
+        tmp = tmp[length(tmp)]
+        if(pmatch("nex", tmp)==1)xx$format="nexus"
+        else xx$format="phylip"
+        readTrees(input$file1$datapath, xx$format) 
     })
     
 
     output$treeControls <- renderUI({
-        inFile <- input$file1        
-        if (length(inFile)==1)
-            return(NULL)        
+        inFile <- input$file1 
+        if (is.null(inFile))
+            return(NULL)    
+#        if (length(inFile)==1)
+#            return(NULL)        
         tree <- treeInput()
         ntrees <- length(tree) 
         if(ntrees>1)
@@ -54,6 +65,9 @@ shinyServer(function(input, session, output) {
                 edge.lty =input$lty,   
                 edge.color =input$edgecolor,
                 tip.color = input$tipcolor)
+#        tmp = get("last_plot.phylo", envir = .PlotPhyloEnv)
+#        abline(h=tmp$y.lim)
+#        abline(v=tmp$x.lim)       
         if(input$scalebar) add.scale.bar()
     })
 
@@ -113,11 +127,11 @@ shinyServer(function(input, session, output) {
         cat("library(ape) \n", sep="")
         cat("library(phangorn) \n", sep="")      
         if(length(trees)==1){
-            if(input$format=='phylip') cat("tree = read.tree('",input$file1$name,"') \n", sep="")
+            if(xx$format=='phylip') cat("tree = read.tree('",input$file1$name,"') \n", sep="")
             else cat("tree = read.nexus('",input$file1$name,"') \n", sep="")
         }
         else {
-            if(input$format=='phylip') cat("trees = read.tree('",input$file1$name,"') \n", sep="")
+            if(xx$format=='phylip') cat("trees = read.tree('",input$file1$name,"') \n", sep="")
             else cat("trees = read.nexus('",input$file1$name,"') \n", sep="")
             cat("tree = trees[[",pos(),"]] \n", sep="")
         }
