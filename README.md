@@ -14,3 +14,4 @@ The R_code tab gives you the R commands used for plotting the tree as a starting
 License
 -------
 shinyTreeViewer is licensed under the GPLv3.
+
