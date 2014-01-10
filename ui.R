@@ -25,6 +25,11 @@ shinyUI(pageWithSidebar(
             numericInput("rotate", "Rotate:", value=0)
         ),         
         checkboxInput("scalebar", "Scale bar", TRUE),  
+        conditionalPanel(
+            condition = "input.type == 'phylogram' || input.type == 'cladogram'",
+            checkboxInput("axis", "Axis", FALSE)
+        ),     
+        checkboxInput("margin", "Show margins", FALSE),
 #        checkboxInput("midpoint", "Midpoint rooting", FALSE),
         tags$hr(),
 #Tips        
@@ -43,7 +48,7 @@ shinyUI(pageWithSidebar(
         tabsetPanel(
             tabPanel("Plot", plotOutput("phyloPlot")), 
             tabPanel("R code", verbatimTextOutput("rcode")),
-            tabPanelAbout() #("About")
+            tabPanelAbout() 
         )
     )
 ))

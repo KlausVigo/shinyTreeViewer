@@ -65,9 +65,19 @@ shinyServer(function(input, session, output) {
                 edge.lty =input$lty,   
                 edge.color =input$edgecolor,
                 tip.color = input$tipcolor)
-#        tmp = get("last_plot.phylo", envir = .PlotPhyloEnv)
-#        abline(h=tmp$y.lim)
-#        abline(v=tmp$x.lim)       
+        if(input$margin){
+#            tmp = get("last_plot.phylo", envir = .PlotPhyloEnv)
+#            abline(h=tmp$y.lim)
+#            abline(v=tmp$x.lim)  
+            box("outer", col="red")
+            box("inner", col="green")
+            box("plot", col="blue") 
+        }
+        if(input$axis){
+            if(input$direction == "leftwards" || input$direction == "rightwards") 
+                axisPhylo(side = 1)
+            else axisPhylo(side = 2)
+        } 
         if(input$scalebar) add.scale.bar()
     })
 
@@ -82,7 +92,6 @@ shinyServer(function(input, session, output) {
             dpi=300
             ext = input$ExportFormat
             
-#            png(file)
             switch(ext,
                    eps = postscript(file, height=height, width=width),
                    ps = postscript(file, height=height, width=width),       
@@ -100,10 +109,8 @@ shinyServer(function(input, session, output) {
                         
             trees <- treeInput()
             if(length(trees)==1)tree = trees[[1]]
-            else tree = trees[[pos()]]
-            
+            else tree = trees[[pos()]]            
 #            if(input$midpoint) tree <- midpoint(tree)
-
             plot.phylo(tree,
                        type = input$type,
                        show.tip.label = input$showTips,
@@ -115,6 +122,11 @@ shinyServer(function(input, session, output) {
                        edge.lty =input$lty,
                        edge.color =input$edgecolor,
                        tip.color = input$tipcolor)
+            if(input$axis){
+                if(input$direction == "leftwards" || input$direction == "rightwards") 
+                    axisPhylo(side = 1)
+                else axisPhylo(side = 2)
+            } 
             if(input$scalebar) add.scale.bar()
             dev.off()
         })
@@ -156,6 +168,11 @@ shinyServer(function(input, session, output) {
         else tipcolor=""        
         cat("plot.phylo(tree, type='",input$type,"'", showTips, showNodes, direction, rotate, edgeLength, edgewidth, lty, edgecolor, tipcolor, ") \n", sep = "")
         if(input$scalebar) cat("add.scale.bar() \n", sep="")
+        if(input$axis){
+            if(input$direction == "leftwards" || input$direction == "rightwards") 
+                cat("axisPhylo(side = 1) \n", sep="")
+            else cat("axisPhylo(side = 2) \n", sep="")
+        } 
     })
     
 })
