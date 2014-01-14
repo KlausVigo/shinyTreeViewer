@@ -21,8 +21,8 @@ shinyServer(function(input, session, output) {
     treeInput <- reactive({
         tmp = strsplit(tolower(input$file1$name), "[.]")[[1]]
         tmp = tmp[length(tmp)]
-        if(pmatch("nex", tmp)==1)xx$format="nexus"
-        else xx$format="phylip"
+        if(is.na(pmatch("nex", tmp)))xx$format="phylip"
+        else xx$format="nexus"
         readTrees(input$file1$datapath, xx$format) 
     })
     
