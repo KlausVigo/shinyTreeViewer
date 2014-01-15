@@ -2,6 +2,13 @@ tabPanelAbout <- source("about.R")$value
 shinyUI(pageWithSidebar(
     headerPanel("shinyTreeViewer"),
     sidebarPanel(
+    actionButton("pButton", tags$img(src="phylogram.png", width="40", height="40", alt="phylogram")),
+    actionButton("uButton", tags$img(src="unrooted.png", width="40", height="40", alt="unrooted")),
+    actionButton("fButton", tags$img(src="fan.png", width="40", height="40", alt="fan")),
+    actionButton("cButton", tags$img(src="cladogram.png", width="40", height="40", alt="cladogram")),
+    actionButton("rButton", tags$img(src="radial.png", width="40", height="40", alt="radial")),    
+#        tags$button(id="cladoButton", src="./images/cladogram.png"
+#    , width="40", height="40"),
         fileInput('file1', 'Choose tree file'),
 #        selectInput('format', 'File format', choices = c('phylip', 'nexus')),
 #        tags$hr(),        
@@ -30,7 +37,7 @@ shinyUI(pageWithSidebar(
             checkboxInput("axis", "Axis", FALSE)
         ),     
         checkboxInput("margin", "Show margins", FALSE),
-#        checkboxInput("midpoint", "Midpoint rooting", FALSE),
+        checkboxInput("midpoint", "Midpoint rooting", FALSE),
         tags$hr(),
 #Tips        
         checkboxInput("showTips", "Tip labels", TRUE),
