@@ -3,7 +3,6 @@ library(ape)
 library(phangorn)
 
 
-
 readTrees <- function(file, format="phylip"){
     if(format=="phylip")tree = read.tree(file)
     else tree = read.nexus(file)
@@ -11,12 +10,37 @@ readTrees <- function(file, format="phylip"){
     tree
 }
 
-
-
 shinyServer(function(input, session, output) {
  
     xx <- reactiveValues()
     xx$format <- "phylip"
+    xx$type <- "phylogram"
+    
+    observe({
+        if (input$phylogram != 0) {
+            xx$type <- "phylogram"
+        }
+    })
+    observe({
+        if (input$unrooted != 0) {
+            xx$type <- "unrooted"
+        }
+    })
+    observe({
+        if (input$fan != 0) {
+            xx$type <- "fan"
+        }
+    })
+    observe({
+        if (input$cladogram != 0) {
+            xx$type <- "cladogram"
+        }
+    })
+    observe({
+        if (input$radial != 0) {
+            xx$type <- "radial"
+        }
+    })
     
     treeInput <- reactive({
         tmp = strsplit(tolower(input$file1$name), "[.]")[[1]]
@@ -26,7 +50,6 @@ shinyServer(function(input, session, output) {
         readTrees(input$file1$datapath, xx$format) 
     })
     
-
     output$treeControls <- renderUI({
         inFile <- input$file1 
         if (is.null(inFile))
@@ -39,11 +62,26 @@ shinyServer(function(input, session, output) {
         sliderInput("tpos", "Tree:", min=1, max=ntrees, value=1, step=1)    
     })
     
+    output$direction <- renderUI({
+        if(xx$type == 'phylogram' || xx$type == 'cladogram')
+        selectInput('direction', 'Direction',
+                    c('rightwards', 'leftwards', 'upwards', 'downwards'))
+    })
+     
+    output$rotate <- renderUI({
+        if(xx$type == 'fan' || xx$type == 'unrooted' || xx$type == 'radial')
+            numericInput("rotate", "Rotate:", value=0)
+    }) 
+    
+    output$axis <- renderUI({#        conditionalPanel(
+        if(xx$type == 'phylogram' || xx$type == 'cladogram')
+            checkboxInput("axis", "Axis", FALSE)
+    })  
+    
     pos <- reactive({
         input$tpos
     })
 
-    
     output$phyloPlot <- renderPlot({
         inFile <- input$file1        
         if (length(inFile)==1)
@@ -55,7 +93,7 @@ shinyServer(function(input, session, output) {
         
         if(input$midpoint) tree <- midpoint(tree)
         plot.phylo(tree, 
-                type = input$type,
+                type = xx$type,
                 show.tip.label = input$showTips,
                 show.node.label = input$showNodes,
                 direction=input$direction, 
@@ -88,7 +126,7 @@ shinyServer(function(input, session, output) {
         content = function(file) {
             
             width = 6
-            height = ifelse(input$type=='phylogram' || input$type=='cladogram',4,6)
+            height = ifelse(xx$type=='phylogram' || xx$type=='cladogram',4,6)
             dpi=300
             ext = input$ExportFormat
             
@@ -112,7 +150,7 @@ shinyServer(function(input, session, output) {
             else tree = trees[[pos()]]            
             if(input$midpoint) tree <- midpoint(tree)
             plot.phylo(tree,
-                       type = input$type,
+                       type = xx$type,
                        show.tip.label = input$showTips,
                        show.node.label = input$showNodes,
                        direction=input$direction,
@@ -166,7 +204,7 @@ shinyServer(function(input, session, output) {
         else edgecolor=""
         if(input$tipcolor!="black") tipcolor = paste(", tip.color='", input$tipcolor, "'", sep="")
         else tipcolor=""        
-        cat("plot.phylo(tree, type='",input$type,"'", showTips, showNodes, direction, rotate, edgeLength, edgewidth, lty, edgecolor, tipcolor, ") \n", sep = "")
+        cat("plot.phylo(tree, type='",xx$type,"'", showTips, showNodes, direction, rotate, edgeLength, edgewidth, lty, edgecolor, tipcolor, ") \n", sep = "")
         if(input$scalebar) cat("add.scale.bar() \n", sep="")
         if(input$axis){
             if(input$direction == "leftwards" || input$direction == "rightwards") 
