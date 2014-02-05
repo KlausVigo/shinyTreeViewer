@@ -70,7 +70,7 @@ shinyServer(function(input, session, output) {
      
     output$rotate <- renderUI({
         if(xx$type == 'fan' || xx$type == 'unrooted' || xx$type == 'radial')
-            numericInput("rotate", "Rotate:", value=0)
+            sliderInput("rotate", "Rotate:", min=0, max=360, value=0, step=1)
     }) 
     
     output$axis <- renderUI({#        conditionalPanel(
