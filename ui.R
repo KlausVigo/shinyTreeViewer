@@ -23,6 +23,8 @@ shinyUI(pageWithSidebar(
         uiOutput('direction'),
 
         uiOutput('rotate'),
+
+        
     
         checkboxInput("scalebar", "Scale bar", TRUE),  
     
@@ -33,7 +35,9 @@ shinyUI(pageWithSidebar(
         tags$hr(),
 #Tips        
         checkboxInput("showTips", "Tip labels", TRUE),
+        uiOutput('lab4ut'),
         textInput("tipcolor", "Tip color:", value="black"),
+
 #Nodes
         checkboxInput("showNodes", "Node labels (e.g. bootstrap values)", FALSE),
         tags$hr(),

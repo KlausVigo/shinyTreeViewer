@@ -1,4 +1,5 @@
 library(shiny)
+source("plot.phylo.R")
 library(ape)
 library(phangorn)
 
@@ -72,6 +73,16 @@ shinyServer(function(input, session, output) {
         if(xx$type == 'fan' || xx$type == 'unrooted' || xx$type == 'radial')
             sliderInput("rotate", "Rotate:", min=0, max=360, value=0, step=1)
     }) 
+
+
+    output$lab4ut <- renderUI({
+        if(xx$type == 'fan' || xx$type == 'unrooted' || xx$type == 'radial')
+            radioButtons('lab4ut', 'Labels',
+                         c('horizontal',
+                           'radial'),
+                         'radial')
+    }) 
+
     
     output$axis <- renderUI({#        conditionalPanel(
         if(xx$type == 'phylogram' || xx$type == 'cladogram')
@@ -98,6 +109,7 @@ shinyServer(function(input, session, output) {
                 show.node.label = input$showNodes,
                 direction=input$direction, 
                 rotate.tree = input$rotate,
+                lab4ut = input$lab4ut, 
                 use.edge.length = input$edgeLength,   
                 edge.width = input$edgewidth, 
                 edge.lty =input$lty,   
@@ -155,6 +167,7 @@ shinyServer(function(input, session, output) {
                        show.node.label = input$showNodes,
                        direction=input$direction,
                        rotate.tree = input$rotate,
+                       lab4ut = input$lab4ut, 
                        use.edge.length = input$edgeLength,
                        edge.width = input$edgewidth,
                        edge.lty =input$lty,
@@ -194,6 +207,9 @@ shinyServer(function(input, session, output) {
         else direction=""
         if(input$rotate!=0) rotate = paste(", rotate.tree=", input$rotate, sep="")
         else rotate=""    
+        if(xx$type == 'fan' || xx$type == 'unrooted' || xx$type == 'radial')
+            lab4ut = paste(", lab4ut='", input$lab4ut, "'", sep="")
+        else lab4ut = ""
         if(input$edgeLength==FALSE) edgeLength = paste(", use.edge.length=FALSE")
         else edgeLength=""
         if(input$edgewidth!=1) edgewidth = paste(", edge.width=", input$edgewidth, sep="")
@@ -204,7 +220,7 @@ shinyServer(function(input, session, output) {
         else edgecolor=""
         if(input$tipcolor!="black") tipcolor = paste(", tip.color='", input$tipcolor, "'", sep="")
         else tipcolor=""        
-        cat("plot.phylo(tree, type='",xx$type,"'", showTips, showNodes, direction, rotate, edgeLength, edgewidth, lty, edgecolor, tipcolor, ") \n", sep = "")
+        cat("plot.phylo(tree, type='",xx$type,"'", showTips, showNodes, direction, rotate, lab4ut, edgeLength, edgewidth, lty, edgecolor, tipcolor, ") \n", sep = "")
         if(input$scalebar) cat("add.scale.bar() \n", sep="")
         if(input$axis){
             if(input$direction == "leftwards" || input$direction == "rightwards") 
