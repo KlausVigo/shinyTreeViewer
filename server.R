@@ -74,6 +74,11 @@ shinyServer(function(input, session, output) {
             sliderInput("rotate", "Rotate:", min=0, max=360, value=0, step=1)
     }) 
 
+    output$openangle <- renderUI({
+        if(xx$type == 'fan' || xx$type == 'radial')
+            sliderInput("openangle", "Open angle:", min=0, max=360, value=0, step=1)
+    })
+
 
     output$lab4ut <- renderUI({
         if(xx$type == 'fan' || xx$type == 'unrooted' || xx$type == 'radial')
@@ -109,6 +114,7 @@ shinyServer(function(input, session, output) {
                 show.node.label = input$showNodes,
                 direction=input$direction, 
                 rotate.tree = input$rotate,
+                open.angle = input$openangle,
                 lab4ut = input$lab4ut, 
                 use.edge.length = input$edgeLength,   
                 edge.width = input$edgewidth, 
@@ -167,6 +173,7 @@ shinyServer(function(input, session, output) {
                        show.node.label = input$showNodes,
                        direction=input$direction,
                        rotate.tree = input$rotate,
+                       open.angle = input$openangle,
                        lab4ut = input$lab4ut, 
                        use.edge.length = input$edgeLength,
                        edge.width = input$edgewidth,
@@ -206,7 +213,9 @@ shinyServer(function(input, session, output) {
         if(input$direction!="rightwards") direction = paste(", direction='", input$direction, "'", sep="")
         else direction=""
         if(input$rotate!=0) rotate = paste(", rotate.tree=", input$rotate, sep="")
-        else rotate=""    
+        else rotate="" 
+        if(input$openangle!=0) rotate = paste(", open.angle=", input$openangle, sep="")
+        else openangle="" 
         if(xx$type == 'fan' || xx$type == 'unrooted' || xx$type == 'radial')
             lab4ut = paste(", lab4ut='", input$lab4ut, "'", sep="")
         else lab4ut = ""
@@ -220,7 +229,7 @@ shinyServer(function(input, session, output) {
         else edgecolor=""
         if(input$tipcolor!="black") tipcolor = paste(", tip.color='", input$tipcolor, "'", sep="")
         else tipcolor=""        
-        cat("plot.phylo(tree, type='",xx$type,"'", showTips, showNodes, direction, rotate, lab4ut, edgeLength, edgewidth, lty, edgecolor, tipcolor, ") \n", sep = "")
+        cat("plot.phylo(tree, type='",xx$type,"'", showTips, showNodes, direction, rotate, openangle, lab4ut, edgeLength, edgewidth, lty, edgecolor, tipcolor, ") \n", sep = "")
         if(input$scalebar) cat("add.scale.bar() \n", sep="")
         if(input$axis){
             if(input$direction == "leftwards" || input$direction == "rightwards") 

@@ -24,7 +24,7 @@ shinyUI(pageWithSidebar(
 
         uiOutput('rotate'),
 
-        
+        uiOutput('openangle'),         
     
         checkboxInput("scalebar", "Scale bar", TRUE),  
     
