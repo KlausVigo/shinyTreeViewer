@@ -241,7 +241,11 @@ shinyServer(function(input, session, output) {
         else direction=""
         if(input$rotate!=0) rotate = paste(", rotate.tree=", input$rotate, sep="")
         else rotate="" 
+<<<<<<< HEAD
         if(input$openangle!=0) openangle = paste(", open.angle=", input$openangle, sep="")
+=======
+        if(input$openangle!=0) rotate = paste(", open.angle=", input$openangle, sep="")
+>>>>>>> c0687ec9522d575809baf7b7b00de5d2ebd77aab
         else openangle="" 
         if(xx$type == 'fan' || xx$type == 'unrooted' || xx$type == 'radial')
             lab4ut = paste(", lab4ut='", input$lab4ut, "'", sep="")
@@ -258,7 +262,11 @@ shinyServer(function(input, session, output) {
         else edgecolor=""
         if(input$tipcolor!="black") tipcolor = paste(", tip.color='", input$tipcolor, "'", sep="")
         else tipcolor=""        
+<<<<<<< HEAD
         cat("plot.phylo(tree, type='",xx$type,"'", showTips, showNodes, direction, rotate, openangle, lab4ut, edgeLength, font, edgewidth, lty, edgecolor, tipcolor, ") \n", sep = "")
+=======
+        cat("plot.phylo(tree, type='",xx$type,"'", showTips, showNodes, direction, rotate, openangle, lab4ut, edgeLength, edgewidth, lty, edgecolor, tipcolor, ") \n", sep = "")
+>>>>>>> c0687ec9522d575809baf7b7b00de5d2ebd77aab
         if(input$scalebar) cat("add.scale.bar() \n", sep="")
         if(input$axis){
             if(input$direction == "leftwards" || input$direction == "rightwards") 
