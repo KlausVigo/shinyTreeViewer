@@ -9,7 +9,8 @@ shinyUI(pageWithSidebar(
 <button id=\"cladogram\"type=\"button\" class=\"btn action-button\">\n  <img src=\"cladogram.png\" width=\"40\" height=\"40\" alt=\"cladogram\"/>\n</button>
 <button id=\"radial\" type=\"button\" class=\"btn action-button\">\n  <img src=\"radial.png\" width=\"40\" height=\"40\" alt=\"radial\"/>\n</button>
 </div>"),    
-  
+
+
         fileInput('file1', 'Choose tree file'),
       
         textInput('filename', 'Filename'),
@@ -33,6 +34,13 @@ shinyUI(pageWithSidebar(
         checkboxInput("margin", "Show margins", FALSE),
         checkboxInput("midpoint", "Midpoint rooting", FALSE),
         tags$hr(),
+#Labels
+HTML("<div id=\"font\" class=\"btn-group\">
+<button id=\"font1\"  type=\"button\" class=\"btn action-button\">\n  <img src=\"font1.svg\" width=\"40\" height=\"40\" alt=\"phylogram\"/>\n</button>\n
+<button id=\"font2\" type=\"button\" class=\"btn action-button\">\n  <img src=\"font2.svg\" width=\"40\" height=\"40\" alt=\"unrooted\"/>\n</button>
+<button id=\"font3\" type=\"button\" class=\"btn action-button\">\n  <img src=\"font3.svg\" width=\"40\" height=\"40\" alt=\"fan\"/>\n</button>
+<button id=\"font4\"type=\"button\" class=\"btn action-button\">\n  <img src=\"font4.svg\" width=\"40\" height=\"40\" alt=\"cladogram\"/>\n</button>
+</div>"),    
 #Tips        
         checkboxInput("showTips", "Tip labels", TRUE),
         uiOutput('lab4ut'),

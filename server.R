@@ -16,6 +16,7 @@ shinyServer(function(input, session, output) {
     xx <- reactiveValues()
     xx$format <- "phylip"
     xx$type <- "phylogram"
+    xx$font <- 1
     
     observe({
         if (input$phylogram != 0) {
@@ -42,6 +43,30 @@ shinyServer(function(input, session, output) {
             xx$type <- "radial"
         }
     })
+    
+    
+    observe({
+        if (input$font1 != 0) {
+            xx$font <- 1
+        }
+    })
+    observe({
+        if (input$font2 != 0) {
+            xx$font <- 2
+        }
+    })
+    observe({
+        if (input$font3 != 0) {
+            xx$font <- 3
+        }
+    })
+    observe({
+        if (input$font4 != 0) {
+            xx$font <- 4
+        }
+    })
+    
+    
     
     treeInput <- reactive({
         tmp = strsplit(tolower(input$file1$name), "[.]")[[1]]
@@ -116,7 +141,8 @@ shinyServer(function(input, session, output) {
                 rotate.tree = input$rotate,
                 open.angle = input$openangle,
                 lab4ut = input$lab4ut, 
-                use.edge.length = input$edgeLength,   
+                use.edge.length = input$edgeLength, 
+                font = xx$font,
                 edge.width = input$edgewidth, 
                 edge.lty =input$lty,   
                 edge.color =input$edgecolor,
@@ -176,6 +202,7 @@ shinyServer(function(input, session, output) {
                        open.angle = input$openangle,
                        lab4ut = input$lab4ut, 
                        use.edge.length = input$edgeLength,
+                       font = xx$font,
                        edge.width = input$edgewidth,
                        edge.lty =input$lty,
                        edge.color =input$edgecolor,
@@ -221,6 +248,8 @@ shinyServer(function(input, session, output) {
         else lab4ut = ""
         if(input$edgeLength==FALSE) edgeLength = paste(", use.edge.length=FALSE")
         else edgeLength=""
+        if(xx$font!=1) font = paste(", font=", xx$font, sep="")
+        else font=""
         if(input$edgewidth!=1) edgewidth = paste(", edge.width=", input$edgewidth, sep="")
         else edgewidth=""
         if(input$lty!=1) lty = paste(", edge.lty=", input$lty, sep="")
@@ -229,7 +258,7 @@ shinyServer(function(input, session, output) {
         else edgecolor=""
         if(input$tipcolor!="black") tipcolor = paste(", tip.color='", input$tipcolor, "'", sep="")
         else tipcolor=""        
-        cat("plot.phylo(tree, type='",xx$type,"'", showTips, showNodes, direction, rotate, openangle, lab4ut, edgeLength, edgewidth, lty, edgecolor, tipcolor, ") \n", sep = "")
+        cat("plot.phylo(tree, type='",xx$type,"'", showTips, showNodes, direction, rotate, openangle, lab4ut, edgeLength, font, edgewidth, lty, edgecolor, tipcolor, ") \n", sep = "")
         if(input$scalebar) cat("add.scale.bar() \n", sep="")
         if(input$axis){
             if(input$direction == "leftwards" || input$direction == "rightwards") 
