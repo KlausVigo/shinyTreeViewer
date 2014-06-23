@@ -51,9 +51,9 @@ HTML("<div id=\"font\" class=\"btn-group\">
         tags$hr(),
 #Edges  
         checkboxInput("edgeLength", "Use edge length", TRUE),
-        numericInput("edgewidth", "Edge width", value=1),
+        numericInput("edgewidth", "Edge width", value=1, min=0),
         textInput("edgecolor", "Edge color:", value="black"),
-        numericInput("lty", "Line type:", value=1)        
+        numericInput("lty", "Line type:", value=1, min=0, max=6, step=1)        
     ),
     mainPanel(
         tabsetPanel(

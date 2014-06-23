@@ -1,5 +1,5 @@
 library(shiny)
-source("plot.phylo.R")
+#source("plot.phylo.R")
 library(ape)
 library(phangorn)
 
@@ -109,8 +109,8 @@ shinyServer(function(input, session, output) {
         if(xx$type == 'fan' || xx$type == 'unrooted' || xx$type == 'radial')
             radioButtons('lab4ut', 'Labels',
                          c('horizontal',
-                           'radial'),
-                         'radial')
+                           'axial'),
+                         'axial')
     }) 
 
     
