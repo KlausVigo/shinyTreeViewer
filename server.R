@@ -1,5 +1,5 @@
 library(shiny)
-source("plot.phylo.R")
+#source("plot.phylo.R")
 library(ape)
 library(phangorn)
 
@@ -11,13 +11,33 @@ readTrees <- function(file, format="phylip"){
     tree
 }
 
+
+simulateTrees <- function(ntrees, ntips, rooted){
+    tree <- rmtree(ntrees, ntips, rooted)
+    if(class(tree)=="phylo")tree = list(tree)
+    tree
+}
+
+
 shinyServer(function(input, session, output) {
  
+    X <- reactiveValues()
+    X$tree <- list(stree(3))
+    observe({
+        if(input$downloadButton){ 
+            X$tree <- treeInput()
+            X$sim <- FALSE    
+        }                      
+        if(input$simulateButton){ 
+            X$tree <- isolate(simulateTrees(input$ntrees, input$ntips, input$isrooted))
+            X$sim <- TRUE  
+        }    
+    })
+    
     xx <- reactiveValues()
     xx$format <- "phylip"
     xx$type <- "phylogram"
     xx$font <- 1
-    
     observe({
         if (input$phylogram != 0) {
             xx$type <- "phylogram"
@@ -69,20 +89,22 @@ shinyServer(function(input, session, output) {
     
     
     treeInput <- reactive({
+#        input$downloadButton
         tmp = strsplit(tolower(input$file1$name), "[.]")[[1]]
         tmp = tmp[length(tmp)]
         if(is.na(pmatch("nex", tmp)))xx$format="phylip"
         else xx$format="nexus"
-        readTrees(input$file1$datapath, xx$format) 
+        readTrees(input$file1$datapath, xx$format)
     })
     
+    
     output$treeControls <- renderUI({
-        inFile <- input$file1 
-        if (is.null(inFile))
-            return(NULL)    
+#        inFile <- input$file1 
+#        if (is.null(inFile))
+#            return(NULL)    
 #        if (length(inFile)==1)
 #            return(NULL)        
-        tree <- treeInput()
+        tree <- X$tree  #  treeInput()
         ntrees <- length(tree) 
         if(ntrees>1)
         sliderInput("tpos", "Tree:", min=1, max=ntrees, value=1, step=1)    
@@ -109,8 +131,8 @@ shinyServer(function(input, session, output) {
         if(xx$type == 'fan' || xx$type == 'unrooted' || xx$type == 'radial')
             radioButtons('lab4ut', 'Labels',
                          c('horizontal',
-                           'radial'),
-                         'radial')
+                           'axial'),
+                         'axial')
     }) 
 
     
@@ -124,10 +146,12 @@ shinyServer(function(input, session, output) {
     })
 
     output$phyloPlot <- renderPlot({
-        inFile <- input$file1        
-        if (length(inFile)==1)
-            return(NULL)      
-        trees <- treeInput()
+#        inFile <- input$file1        
+#        if (length(inFile)==1)
+#            return(NULL)      
+#        trees <- treeInput()
+ 
+        trees = X$tree
         
         if(length(trees)==1)tree = trees[[1]]
         else tree = trees[[pos()]]
@@ -189,7 +213,7 @@ shinyServer(function(input, session, output) {
                    tiff = tiff(file, width=width, height=height, res=dpi, units="in")                                      
             )
                         
-            trees <- treeInput()
+            trees <- X$tree  #treeInput()
             if(length(trees)==1)tree = trees[[1]]
             else tree = trees[[pos()]]            
             if(input$midpoint) tree <- midpoint(tree)
@@ -220,9 +244,11 @@ shinyServer(function(input, session, output) {
         inFile <- input$file1       
         if (length(inFile)==1)
             return(NULL)
-        trees <- treeInput()
+        trees <- X$tree #treeInput()
         cat("library(ape) \n", sep="")
-        cat("library(phangorn) \n", sep="")      
+        cat("library(phangorn) \n", sep="")    
+        
+        if(!X$sim){
         if(length(trees)==1){
             if(xx$format=='phylip') cat("tree = read.tree('",input$file1$name,"') \n", sep="")
             else cat("tree = read.nexus('",input$file1$name,"') \n", sep="")
@@ -232,6 +258,14 @@ shinyServer(function(input, session, output) {
             else cat("trees = read.nexus('",input$file1$name,"') \n", sep="")
             cat("tree = trees[[",pos(),"]] \n", sep="")
         }
+        }
+        else{
+            if(length(trees)==1)  cat("tree = rtree(",input$ntips, ", rooted= ",input$isrooted,") \n", sep="")
+            else{ cat("trees = rmtree(", input$ntrees, ",", input$ntips,", rooted=",input$isrooted,") \n", sep="")
+            cat("tree = trees[[",pos(),"]] \n", sep="")
+            }
+        }  
+        
         if(input$midpoint) cat("tree = midpoint(tree)\n", sep="")
         if(input$showTips==FALSE)showTips = ", show.tip.label=FALSE"
         else showTips = ""
