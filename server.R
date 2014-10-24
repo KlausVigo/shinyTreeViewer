@@ -38,32 +38,37 @@ shinyServer(function(input, session, output) {
     xx$format <- "phylip"
     xx$type <- "phylogram"
     xx$font <- 1
+    xx$phyloOrClado <- TRUE
     observe({
         if (input$phylogram != 0) {
             xx$type <- "phylogram"
+            xx$phyloOrClado <- TRUE
         }
     })
     observe({
         if (input$unrooted != 0) {
             xx$type <- "unrooted"
+            xx$phyloOrClado <- FALSE
         }
     })
     observe({
         if (input$fan != 0) {
             xx$type <- "fan"
+            xx$phyloOrClado <- FALSE
         }
     })
     observe({
         if (input$cladogram != 0) {
             xx$type <- "cladogram"
+            xx$phyloOrClado <- TRUE
         }
     })
     observe({
         if (input$radial != 0) {
             xx$type <- "radial"
+            xx$phyloOrClado <- FALSE
         }
     })
-    
     
     observe({
         if (input$font1 != 0) {
@@ -89,7 +94,6 @@ shinyServer(function(input, session, output) {
     
     
     treeInput <- reactive({
-#        input$downloadButton
         tmp = strsplit(tolower(input$file1$name), "[.]")[[1]]
         tmp = tmp[length(tmp)]
         if(is.na(pmatch("nex", tmp)))xx$format="phylip"
@@ -115,6 +119,11 @@ shinyServer(function(input, session, output) {
         selectInput('direction', 'Direction',
                     c('rightwards', 'leftwards', 'upwards', 'downwards'))
     })
+
+    output$axis <- renderUI({#        conditionalPanel(
+        if(xx$phyloOrClado || xx$type == 'fan')
+            checkboxInput("axis", "Axis", FALSE)
+    })
      
     output$rotate <- renderUI({
         if(xx$type == 'fan' || xx$type == 'unrooted' || xx$type == 'radial')
@@ -136,11 +145,16 @@ shinyServer(function(input, session, output) {
     }) 
 
     
-    output$axis <- renderUI({#        conditionalPanel(
-        if(xx$type == 'phylogram' || xx$type == 'cladogram')
-            checkboxInput("axis", "Axis", FALSE)
-    })  
+  
     
+    yy <- reactiveValues()
+    yy$axis <- FALSE
+
+    observe({
+        if(is.null(input$axis))yy$axis = FALSE
+        else yy$axis <- input$axis
+    })
+
     pos <- reactive({
         input$tpos
     })
@@ -179,8 +193,8 @@ shinyServer(function(input, session, output) {
             box("inner", col="green")
             box("plot", col="blue") 
         }
-        if(input$axis){
-            if(input$direction == "leftwards" || input$direction == "rightwards") 
+        if((xx$phyloOrClado || xx$type == 'fan') && yy$axis){
+            if(  input$direction == "leftwards" || input$direction == "rightwards") 
                 axisPhylo(side = 1)
             else axisPhylo(side = 2)
         } 
@@ -231,7 +245,7 @@ shinyServer(function(input, session, output) {
                        edge.lty =input$lty,
                        edge.color =input$edgecolor,
                        tip.color = input$tipcolor)
-            if(input$axis){
+            if((xx$phyloOrClado || xx$type == 'fan') && yy$axis ){
                 if(input$direction == "leftwards" || input$direction == "rightwards") 
                     axisPhylo(side = 1)
                 else axisPhylo(side = 2)
@@ -271,13 +285,13 @@ shinyServer(function(input, session, output) {
         else showTips = ""
         if(input$showNodes==TRUE)showNodes = ", show.node.label=TRUE"
         else showNodes = ""
-        if(input$direction!="rightwards") direction = paste(", direction='", input$direction, "'", sep="")
+        if(xx$phyloOrClado && input$direction!="rightwards") direction = paste(", direction='", input$direction, "'", sep="")
         else direction=""
-        if(input$rotate!=0) rotate = paste(", rotate.tree=", input$rotate, sep="")
+        if(!xx$phyloOrClado && input$rotate!=0) rotate = paste(", rotate.tree=", input$rotate, sep="")
         else rotate="" 
-        if(input$openangle!=0) openangle = paste(", open.angle=", input$openangle, sep="")
+        if((xx$type == 'fan' || xx$type == 'radial') && input$openangle!=0) openangle = paste(", open.angle=", input$openangle, sep="")
         else openangle="" 
-        if(xx$type == 'fan' || xx$type == 'unrooted' || xx$type == 'radial')
+        if(!xx$phyloOrClado) #(xx$type == 'fan' || xx$type == 'unrooted' || xx$type == 'radial')
             lab4ut = paste(", lab4ut='", input$lab4ut, "'", sep="")
         else lab4ut = ""
         if(input$edgeLength==FALSE) edgeLength = paste(", use.edge.length=FALSE")
@@ -293,8 +307,8 @@ shinyServer(function(input, session, output) {
         if(input$tipcolor!="black") tipcolor = paste(", tip.color='", input$tipcolor, "'", sep="")
         else tipcolor=""        
         cat("plot.phylo(tree, type='",xx$type,"'", showTips, showNodes, direction, rotate, openangle, lab4ut, edgeLength, font, edgewidth, lty, edgecolor, tipcolor, ") \n", sep = "")
-        if(input$scalebar) cat("add.scale.bar() \n", sep="")
-        if(input$axis){
+        if(input$scalebar) cat("add.scale.bar() \n", sep="")        
+        if( (xx$phyloOrClado || xx$type == "fan") && yy$axis){
             if(input$direction == "leftwards" || input$direction == "rightwards") 
                 cat("axisPhylo(side = 1) \n", sep="")
             else cat("axisPhylo(side = 2) \n", sep="")

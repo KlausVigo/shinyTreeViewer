@@ -43,9 +43,9 @@ shinyUI(navbarPage("shinyTreeViewer",
                 
                 uiOutput('openangle'),         
                 
-                checkboxInput("scalebar", "Scale bar", TRUE),  
-                
                 uiOutput('axis'),
+                                
+                checkboxInput("scalebar", "Scale bar", TRUE),  
                 
                 checkboxInput("margin", "Show margins", FALSE),
                 checkboxInput("midpoint", "Midpoint rooting", FALSE),
