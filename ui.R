@@ -6,15 +6,18 @@ shinyUI(navbarPage("shinyTreeViewer",
 
         wellPanel(
             fluidRow(
-                column(6,             
+                column(6,     
+                    h3("Import tree"),   
                     fileInput('file1', 'Import tree file'),
                     actionButton("downloadButton", icon("refresh")),
                     tags$hr(),
+                    h3("Export tree"), 
                     textInput('filename', 'Filename'),
                     selectInput('ExportFormat', '', choices = c('pdf', 'ps', 'tex', 'svg', 'png', 'jpg', 'bmp' )),
                     downloadButton('downloadPlot', 'Export Plot')       
                 ),
                 column(6,
+                    h3("Simulate tree"),    
                     numericInput("ntips", "Number of tips", value=10, min=3),   
                     numericInput("ntrees", "Number of trees", value=1, min=1),
                     checkboxInput("isrooted", "Rooted", TRUE),
@@ -30,7 +33,7 @@ shinyUI(navbarPage("shinyTreeViewer",
 <button id=\"phylogram\"  type=\"button\" class=\"btn action-button\">\n  <img src=\"phylogram.png\" width=\"40\" height=\"40\" alt=\"phylogram\"/>\n</button>\n
 <button id=\"unrooted\" type=\"button\" class=\"btn action-button\">\n  <img src=\"unrooted.png\" width=\"40\" height=\"40\" alt=\"unrooted\"/>\n</button>
 <button id=\"fan\" type=\"button\" class=\"btn action-button\">\n  <img src=\"fan.png\" width=\"40\" height=\"40\" alt=\"fan\"/>\n</button>
-<button id=\"cladogram\"type=\"button\" class=\"btn action-button\">\n  <img src=\"cladogram.png\" width=\"40\" height=\"40\" alt=\"cladogram\"/>\n</button>
+<button id=\"cladogram\" type=\"button\" class=\"btn action-button\">\n  <img src=\"cladogram.png\" width=\"40\" height=\"40\" alt=\"cladogram\"/>\n</button>
 <button id=\"radial\" type=\"button\" class=\"btn action-button\">\n  <img src=\"radial.png\" width=\"40\" height=\"40\" alt=\"radial\"/>\n</button>
 </div>"),   
                 # Layout        
@@ -43,9 +46,9 @@ shinyUI(navbarPage("shinyTreeViewer",
                 
                 uiOutput('openangle'),         
                 
-                checkboxInput("scalebar", "Scale bar", TRUE),  
-                
                 uiOutput('axis'),
+                                
+                checkboxInput("scalebar", "Scale bar", TRUE),  
                 
                 checkboxInput("margin", "Show margins", FALSE),
                 checkboxInput("midpoint", "Midpoint rooting", FALSE),
@@ -78,6 +81,7 @@ shinyUI(navbarPage("shinyTreeViewer",
         )        
     ), 
     tabPanel("R code", verbatimTextOutput("rcode")),
-    tabPanelAbout() 
+    tabPanelAbout()
+    
 ))
 
