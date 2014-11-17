@@ -23,15 +23,19 @@ shinyServer(function(input, session, output) {
     X <- reactiveValues()
     X$tree <- list(stree(3))
     X$sim <- TRUE 
+    X$dB <- 0
+    X$iB <- 0
     observe({
-        if(input$downloadButton){ 
+        if(input$downloadButton[1] > X$dB){ 
             X$tree <- treeInput()
-            X$sim <- FALSE    
+            X$sim <- FALSE  
+            X$dB <- input$downloadButton[1]
         }                      
-        if(input$simulateButton){ 
+        if(input$simulateButton[1] > X$iB){ 
             X$tree <- isolate(simulateTrees(input$ntrees, input$ntips, input$isrooted))
-            X$sim <- TRUE  
-        }    
+            X$sim <- TRUE
+            X$iB <- input$simulateButton[1]
+        }       
     })
     
     xx <- reactiveValues()
