@@ -9,7 +9,7 @@ shinyUI(navbarPage("shinyTreeViewer",
                 column(6,     
                     h3("Import tree"),   
                     fileInput('file1', 'Import tree file'),
-                    actionButton("downloadButton", icon("refresh")),
+                    actionButton("downloadButton", "update plot"), #icon("refresh")),
                     tags$hr(),
                     h3("Export tree"), 
                     textInput('filename', 'Filename'),
@@ -21,7 +21,7 @@ shinyUI(navbarPage("shinyTreeViewer",
                     numericInput("ntips", "Number of tips", value=10, min=3),   
                     numericInput("ntrees", "Number of trees", value=1, min=1),
                     checkboxInput("isrooted", "Rooted", TRUE),
-                    actionButton("simulateButton", icon("refresh"))
+                    actionButton("simulateButton", "update plot") #  icon("refresh"))
                 )        
             )
         )     
