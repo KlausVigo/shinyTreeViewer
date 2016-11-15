@@ -7,6 +7,14 @@ shinyUI(navbarPage("shinyTreeViewer",
         wellPanel(
             fluidRow(
                 column(6,     
+                    h2(HTML('<font color="#6C6CC4" size="5"> > Input </font>')),
+                    radioButtons("datasource", HTML('<font size="4"> Choose data source:</font>'),
+                                    list("Example: annotated tree"="exTree", 
+                                         "Example: MCMC sample"="exMCMC",
+                                         "Input file"="file", 
+                                         "Simulate trees"="simulate")),   
+                       
+                       
                     h3("Import tree"),   
                     fileInput('file1', 'Import tree file'),
                     actionButton("downloadButton", "update plot"), #icon("refresh")),
