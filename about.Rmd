@@ -1,0 +1,19 @@
+## About
+
+shinyTreeviewer is a small treeviewer to plot phylogenetic trees using the R packages ape and phangorn. It is possible to run it from within R:
+```shiny::runGitHub('shinyTreeViewer', 'KlausVigo')``` 
+and it you can launched it also via the [RStudio server](http://klash.shinyapps.io/shinyTreeViewer/) from your web browser. 
+
+shinyTreeviewer is free software and the source code is hosted on [GitHub](https://github.com/KlausVigo/shinyTreeViewer). 
+shinyTreeViewer is in early development so I am happy to recieve suggestions or bug reports. 
+
+### References
+
+[shiny](http://www.rstudio.com/shiny)
+[ape](http://ape-package.ird.fr/)
+[phangorn](http://cran.r-project.org/web/packages/phangorn/)
+
+### License
+shinyTreeViewer is licensed under the GPLv3. 
+
+
