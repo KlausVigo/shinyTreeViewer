@@ -8,7 +8,7 @@ You can run shinyTreeViewer from inside R. You need to have installed recent ver
 
 You can launch shinyTreeViewer directly via the [RStudio server](http://klash.shinyapps.io/shinyTreeViewer/).
 
-The R_code tab gives you the R commands used for creating the plot. This allows you to to explore with different parameters or can be a starting point to create more sophisticated plots.    
+The R_code tab gives you the R commands used for creating the plot. This allows you to explore with different parameters or can be a starting point to create more sophisticated plots.    
 
 
 License
